@@ -1,5 +1,6 @@
 # from django.http import HttpResponse, JsonResponse
 from django.views.generic import ListView, DetailView
+from django.contrib.auth.models import User
 from django.core.paginator import Paginator
 from django.shortcuts import render, get_object_or_404
 from .models import Article, Category
@@ -15,12 +16,12 @@ from .models import Article, Category
 #         'articles': articles,
 #         # 'category': Category.objects.filter(status=True)
 #     }
-#     return render(request, 'blog/home.html', context=context)
+#     return render(request, 'blog/article_list.html', context=context)
 
 class ArticleList(ListView):
     # model = Article
-    template_name = "blog/home.html"
-    context_object_name = "articles"
+    template_name = "blog/article_list.html"
+    # context_object_name = "articles"
     queryset = Article.objects.published().order_by('-publish')
     paginate_by = 5
 
@@ -50,13 +51,13 @@ class ArticleDetail(DetailView):
 #         'category': category,
 #         'articles': articles,
 #     }
-#     return render(request, 'blog/category.html', context=context)
+#     return render(request, 'blog/category_list.html', context=context)
 
 
 class CategoryList(ListView):
     # model = Article
-    template_name = "blog/category.html"
-    context_object_name = "articles"
+    template_name = "blog/category_list.html"
+    # context_object_name = "articles"
     paginate_by = 5
 
     def get_queryset(self):
@@ -68,4 +69,20 @@ class CategoryList(ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['category'] = category
+        return context
+
+
+class AuthorList(ListView):
+    template_name = "blog/author_list.html"
+    paginate_by = 5
+
+    def get_queryset(self):
+        global author
+        username = self.kwargs.get('username')
+        author = get_object_or_404(User, username=username)
+        return author.articles.published()
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['author'] = author
         return context

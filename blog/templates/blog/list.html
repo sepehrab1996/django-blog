@@ -20,7 +20,7 @@
                 {% block header %}
                 {% endblock %}
 
-                {% for article in articles %}
+                {% for article in object_list %}
                     <!-- Post preview-->
                     <div class="post-preview">
                         <a href="{% url 'blog:detail' article.slug %}">
@@ -29,8 +29,8 @@
                         </a>
                         <p class="post-meta">
                             نوشته شده توسط
-                            <a href="#!">سپهر</a>
-                            {{ article.jpublish }}
+                            <a href="{% url 'blog:author' article.author %}">{{ article.author.get_full_name }}</a>
+                            <div style="float: left">{{ article.jpublish }}</div>
                         </p>
                         <div>
                             {% for cat in article.category.active %}
