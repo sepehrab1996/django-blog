@@ -1,0 +1,6 @@
+.idea/
+venv/
+media/images/*
+project1/protected_settings.py
+db.sqlite3
+identifier.sqlite
