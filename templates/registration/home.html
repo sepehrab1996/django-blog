@@ -1,2 +1,68 @@
-My home
-<p>{{ user.get_full_name }}</p>
+{% extends 'registration/base.html' %}
+
+{% block title %}لیست مقالات{% endblock %}
+
+{% block main %}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                {#                <div class="card-header">#}
+                {#                    <h3 class="card-title">Responsive Hover Table</h3>#}
+                {##}
+                {#                    <div class="card-tools">#}
+                {#                        <div class="input-group input-group-sm" style="width: 150px;">#}
+                {#                            <input type="text" name="table_search" class="form-control float-right"#}
+                {#                                   placeholder="Search">#}
+                {##}
+                {#                            <div class="input-group-append">#}
+                {#                                <button type="submit" class="btn btn-default"><i class="fas fa-search"></i></button>#}
+                {#                            </div>#}
+                {#                        </div>#}
+                {#                    </div>#}
+                {#                </div>#}
+                <!-- /.card-header -->
+                <div class="card-body table-responsive p-0">
+                    <table class="table table-hover">
+                        <thead>
+                        <tr>
+                            <th>عنوان مقاله</th>
+                            <th>تصویر بند انگشتی</th>
+                            <th>دسته بندی</th>
+                            <th>نویسنده</th>
+                            <th>خلاصه</th>
+                            <th>زمان انتشار</th>
+                            <th>وضعیت</th>
+
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {% for article in object_list %}
+                            <tr>
+                                <td>{{ article.title }}</td>
+                                <td><img src="{{ article.thumbnail.url }}" width="120"></td>
+                                <td>{{ article.category_to_str }}</td>
+                                <td>{{ article.author.get_full_name }}</td>
+                                <td>{{ article.description|truncatewords:'30' }}</td>
+                                <td>{{ article.jpublish }}</td>
+                                <td>
+                                    {% if article.status == 'p' %}
+                                        <span class="badge badge-success p-1">منتشر شده</span>
+                                        <br>
+                                        <a class="badge badge-primary p-1" target="_blank"
+                                           href="{% url 'blog:detail' article.slug %}">نمایش مقاله در سایت</a>
+                                    {% else %}
+                                        <span class="badge badge-danger p-1">پیش نویس</span>
+                                        <br>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+                <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+        </div>
+    </div>
+{% endblock %}
